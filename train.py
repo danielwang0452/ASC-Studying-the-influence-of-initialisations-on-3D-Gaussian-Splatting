@@ -31,24 +31,25 @@ except ImportError:
 def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoint_iterations, checkpoint, debug_from):
     first_iter = 0
     tb_writer = prepare_output_and_logger(dataset)
-    gaussians = GaussianModel(dataset.sh_degree)
-    scene = Scene(dataset, gaussians)
-    gaussians.training_setup(opt)
-    if checkpoint:
+    gaussians = GaussianModel(dataset.sh_degree) # initialise gaussian model
+    scene = Scene(dataset, gaussians) # initialise scene with gaussian model and dataset
+    gaussians.training_setup(opt) # set up training configurations
+    if checkpoint: # load checkpoint if provided
         (model_params, first_iter) = torch.load(checkpoint)
         gaussians.restore(model_params, opt)
 
     bg_color = [1, 1, 1] if dataset.white_background else [0, 0, 0]
     background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
-
+    # initialise CUDA events for timing iterations
     iter_start = torch.cuda.Event(enable_timing = True)
     iter_end = torch.cuda.Event(enable_timing = True)
 
-    viewpoint_stack = None
-    ema_loss_for_log = 0.0
+    viewpoint_stack = None # stores viewpoints to sample from
+    ema_loss_for_log = 0.0 # EMA loss for logging
     progress_bar = tqdm(range(first_iter, opt.iterations), desc="Training progress")
     first_iter += 1
-    for iteration in range(first_iter, opt.iterations + 1):        
+    for iteration in range(first_iter, opt.iterations + 1): # main loop
+        # this whole block is for GUI logging
         if network_gui.conn == None:
             network_gui.try_connect()
         while network_gui.conn != None:
@@ -63,12 +64,13 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
                     break
             except Exception as e:
                 network_gui.conn = None
+        # end of GUI logging block
 
-        iter_start.record()
+        iter_start.record() # record start time
 
         gaussians.update_learning_rate(iteration)
 
-        # Every 1000 its we increase the levels of SH up to a maximum degree
+        # Every 1000 its we increase the levels of Spherical Harmonics up to a maximum degree
         if iteration % 1000 == 0:
             gaussians.oneupSHdegree()
 
@@ -78,9 +80,9 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         viewpoint_cam = viewpoint_stack.pop(randint(0, len(viewpoint_stack)-1))
 
         # Render
-        if (iteration - 1) == debug_from:
+        if (iteration - 1) == debug_from: # Debug Mode: Enables debug mode if the current iteration matches the debug_from value.
             pipe.debug = True
-
+        # choose random background if specified
         bg = torch.rand((3), device="cuda") if opt.random_background else background
 
         render_pkg = render(viewpoint_cam, gaussians, pipe, bg)
@@ -88,37 +90,39 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
 
         # Loss
         gt_image = viewpoint_cam.original_image.cuda()
-        Ll1 = l1_loss(image, gt_image)
+        Ll1 = l1_loss(image, gt_image # changed to l2 loss in utils.loss_utils
         loss = (1.0 - opt.lambda_dssim) * Ll1 + opt.lambda_dssim * (1.0 - ssim(image, gt_image))
         loss.backward()
 
         iter_end.record()
 
         with torch.no_grad():
-            # Progress bar
+            # logging: Update EMA Loss, update progress bar, log training progress, save model
             ema_loss_for_log = 0.4 * loss.item() + 0.6 * ema_loss_for_log
             if iteration % 10 == 0:
                 progress_bar.set_postfix({"Loss": f"{ema_loss_for_log:.{7}f}"})
                 progress_bar.update(10)
             if iteration == opt.iterations:
                 progress_bar.close()
-
             # Log and save
             training_report(tb_writer, iteration, Ll1, loss, l1_loss, iter_start.elapsed_time(iter_end), testing_iterations, scene, render, (pipe, background))
             if (iteration in saving_iterations):
                 print("\n[ITER {}] Saving Gaussians".format(iteration))
                 scene.save(iteration)
+            # end logging
 
             # Densification
             if iteration < opt.densify_until_iter:
                 # Keep track of max radii in image-space for pruning
                 gaussians.max_radii2D[visibility_filter] = torch.max(gaussians.max_radii2D[visibility_filter], radii[visibility_filter])
-                gaussians.add_densification_stats(viewspace_point_tensor, visibility_filter)
+                gaussians.add_densification_stats(viewspace_point_tensor, visibility_filter) # update densification stats
 
+                # Densifies and prunes the model at specified intervals
                 if iteration > opt.densify_from_iter and iteration % opt.densification_interval == 0:
                     size_threshold = 20 if iteration > opt.opacity_reset_interval else None
                     gaussians.densify_and_prune(opt.densify_grad_threshold, 0.005, scene.cameras_extent, size_threshold)
-                
+
+                # Resets the opacity at specified intervals.
                 if iteration % opt.opacity_reset_interval == 0 or (dataset.white_background and iteration == opt.densify_from_iter):
                     gaussians.reset_opacity()
 
@@ -192,10 +196,11 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
 
 if __name__ == "__main__":
     # Set up command line argument parser
-    parser = ArgumentParser(description="Training script parameters")
+    parser = ArgumentParser(description="Training script parameters") # from python argparse module
     lp = ModelParams(parser)
     op = OptimizationParams(parser)
     pp = PipelineParams(parser)
+    # add_argument specifies a different command-line argument that the script can accept
     parser.add_argument('--ip', type=str, default="127.0.0.1")
     parser.add_argument('--port', type=int, default=6009)
     parser.add_argument('--debug_from', type=int, default=-1)
@@ -206,6 +211,9 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint_iterations", nargs="+", type=int, default=[])
     parser.add_argument("--start_checkpoint", type=str, default = None)
     args = parser.parse_args(sys.argv[1:])
+    # parses the command-line arguments when script is run
+    # sys.argv[1:] provides the list of command-line arguments, excluding the script name
+    # For example, args.ip contains the value passed to the --ip argument
     args.save_iterations.append(args.iterations)
     
     print("Optimizing " + args.model_path)
@@ -213,10 +221,10 @@ if __name__ == "__main__":
     # Initialize system state (RNG)
     safe_state(args.quiet)
 
-    # Start GUI server, configure and run training
+    # Start GUI server, configure and run training - GUI is for monitoring training?
     network_gui.init(args.ip, args.port)
     torch.autograd.set_detect_anomaly(args.detect_anomaly)
     training(lp.extract(args), op.extract(args), pp.extract(args), args.test_iterations, args.save_iterations, args.checkpoint_iterations, args.start_checkpoint, args.debug_from)
-
+    # lp is model params, op is optim larams, pp is pipeline params
     # All done
     print("\nTraining complete.")
