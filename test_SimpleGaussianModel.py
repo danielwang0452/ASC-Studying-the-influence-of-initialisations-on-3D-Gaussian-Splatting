@@ -3,6 +3,11 @@ import numpy as np
 from sh_utils_copy import eval_sh, SH2RGB, RGB2SH
 from typing import NamedTuple
 
+class BasicPointCloud(NamedTuple):
+    points: np.array
+    colors: np.array
+    normals: np.array
+
 class SimpleGaussianModel:
     def setup_functions(self):
         def build_covariance_from_scaling_rotation(scaling, scaling_modifier, rotation):
@@ -35,7 +40,7 @@ class SimpleGaussianModel:
         self.spatial_lr_scale = 0
         self.setup_functions()
 
-    def create_from_pcd(self, pcd: BasicPointCloud, spatial_lr_scale: float = 1):
+    def create_from_pcd(self, pcd, spatial_lr_scale: float = 1):
         opacity = 0.1
 
         self.spatial_lr_scale = spatial_lr_scale
@@ -149,8 +154,3 @@ def strip_lowerdiag(L):
 
 def strip_symmetric(sym):
     return strip_lowerdiag(sym)
-
-class BasicPointCloud(NamedTuple):
-    points: np.array
-    colors: np.array
-    normals: np.array
