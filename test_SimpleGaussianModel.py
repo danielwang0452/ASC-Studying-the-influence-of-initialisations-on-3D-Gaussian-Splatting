@@ -34,7 +34,7 @@ class SimpleGaussianModel:
         self.spatial_lr_scale = 0
         self.setup_functions()
 
-    def create_from_pcd(self, pcd: BasicPointCloud, spatial_lr_scale: float = 1):
+    def create_from_pcd(self, pcd, spatial_lr_scale: float = 1):
         opacity = 0.1
 
         self.spatial_lr_scale = spatial_lr_scale
@@ -148,7 +148,6 @@ def strip_lowerdiag(L):
 
 def strip_symmetric(sym):
     return strip_lowerdiag(sym)
-
 
 class BasicPointCloud(NamedTuple):
     points: np.array
