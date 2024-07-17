@@ -14,6 +14,7 @@ import torch
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+from diff_gaussian_rasterization import GaussianRasterizationSettings, GaussianRasterizer
 from random import randint
 #from utils.loss_utils import l1_loss, ssim
 from sh_utils_copy import eval_sh, SH2RGB, RGB2SH
