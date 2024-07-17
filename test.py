@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from random import randint
 #from utils.loss_utils import l1_loss, ssim
 from gaussian_renderer import render, network_gui
+from typing import NamedTuple
 #import sys
 #from scene import Scene, GaussianModel
 #from utils.general_utils import safe_state
