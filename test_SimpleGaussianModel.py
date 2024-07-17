@@ -67,7 +67,7 @@ class SimpleGaussianModel:
         self._opacity = nn.Parameter(opacities.requires_grad_(True))
         self.max_radii2D = torch.zeros((self.get_xyz.shape[0]), device="cuda")
 
-    def distCUDA2(x):
+    def distCUDA2(self, x):
         """
         Compute pairwise squared distances between points in x.
          x: A tensor of shape (N, D), where N is the number of points and D is the dimensionality of each point.
