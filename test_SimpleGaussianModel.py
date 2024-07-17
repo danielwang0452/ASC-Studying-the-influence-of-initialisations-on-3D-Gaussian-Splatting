@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import numpy as np
 from sh_utils_copy import eval_sh, SH2RGB, RGB2SH
 from typing import NamedTuple
