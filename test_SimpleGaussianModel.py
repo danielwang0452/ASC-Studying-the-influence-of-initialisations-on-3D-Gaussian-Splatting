@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 from sh_utils_copy import eval_sh, SH2RGB, RGB2SH
+from typing import NamedTuple
 
 class SimpleGaussianModel:
     def setup_functions(self):
