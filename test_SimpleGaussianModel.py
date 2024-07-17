@@ -148,3 +148,9 @@ def strip_lowerdiag(L):
 
 def strip_symmetric(sym):
     return strip_lowerdiag(sym)
+
+
+class BasicPointCloud(NamedTuple):
+    points: np.array
+    colors: np.array
+    normals: np.array
