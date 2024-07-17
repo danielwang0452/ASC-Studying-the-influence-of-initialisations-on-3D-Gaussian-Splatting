@@ -154,7 +154,7 @@ class Renderer:
             rotations=rotations,
             cov3D_precomp=cov3D_precomp,
         )
-
+        print(rendered_image)
         rendered_image = rendered_image.cpu().detach().clamp(0, 1).numpy()
 
         # Those Gaussians that were frustum culled or had a radius of 0 were not visible.
