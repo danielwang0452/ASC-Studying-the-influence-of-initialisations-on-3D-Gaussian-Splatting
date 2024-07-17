@@ -172,7 +172,7 @@ H: 800
 W: 800
 sh_degree: 0
 '''
-def test(dataset, opt, pipe):
+def test():
     params = {
         # defined in image.yaml
         'radius': 2,
