@@ -39,7 +39,7 @@ class Renderer:
         self.radius = radius
         self.gaussians = SimpleGaussianModel(sh_degree)
         self.bg_color = torch.tensor(
-            [0.5, 0.5, 0.5] if white_background else [0, 0, 0],
+            [0.5, 0.5, 0.5] if white_background else [0.5, 0.5, 0.5],
             dtype=torch.float32,
             device="cuda",
         )
