@@ -26,7 +26,7 @@ class SimpleGaussianModel:
         self.rotation_activation = torch.nn.functional.normalize
 
     def __init__(self, sh_degree: int): # default = 3
-        self.active_sh_degree = 0
+        self.active_sh_degree = 3
         self.max_sh_degree = sh_degree
         self._xyz = torch.empty(0)
         self._features_dc = torch.empty(0)
