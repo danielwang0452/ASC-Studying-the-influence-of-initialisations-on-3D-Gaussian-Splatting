@@ -154,6 +154,7 @@ class Renderer:
             rotations=rotations,
             cov3D_precomp=cov3D_precomp,
         )
+        print(radii)
         print(rendered_image)
         rendered_image = rendered_image.cpu().detach().clamp(0, 1).numpy()
 
@@ -214,8 +215,8 @@ def test():
             convert_SHs_python=False,
     )
     # display image
-    print(rendered_image.shape)
-    print(rendered_image)
+    #print(rendered_image.shape)
+    #print(rendered_image)
     plt.imshow(rendered_image)
     plt.axis('off')  # Hide axis
     plt.show()
