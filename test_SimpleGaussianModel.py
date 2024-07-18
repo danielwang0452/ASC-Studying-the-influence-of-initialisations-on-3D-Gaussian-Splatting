@@ -43,11 +43,12 @@ class SimpleGaussianModel:
         self.setup_functions()
 
     def create_from_pcd(self, pcd, spatial_lr_scale: float = 1):
-        opacity = 0.5
+        opacity = 0.1
 
         self.spatial_lr_scale = spatial_lr_scale
         fused_point_cloud = torch.tensor(np.asarray(pcd.points)).float().cuda()
         fused_color = RGB2SH(torch.tensor(np.asarray(pcd.colors)).float().cuda())
+        fused_color = torch.tensor([1.0, 0.0, 0.0]).repeat(fused_color.shape[0], 1).cuda()
         features = torch.zeros((fused_color.shape[0], 3, (self.max_sh_degree + 1) ** 2)).float().cuda()
         features[:, :3, 0] = fused_color
         features[:, 3:, 1:] = 0.0
