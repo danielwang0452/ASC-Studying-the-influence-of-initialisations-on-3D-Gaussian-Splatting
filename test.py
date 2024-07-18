@@ -196,10 +196,11 @@ def test():
     # initialise renderer
     renderer = Renderer(sh_degree=3, white_background=True, radius=0.5)
     # initialise gaussians, stored in renderer
-    renderer.initialize(num_pts=2)
+    renderer.initialize(num_pts=2, radius=0.5)
     # initialise camera
     pose = orbit_camera(elevation=params['elevation'],
-                        azimuth=params['azimuth']
+                        azimuth=params['azimuth'],
+                        radius=3
                        )  # return: [4, 4], camera pose matrix
     viewpoint_camera = MiniCam(pose, params['render_resolution'], params['render_resolution'],
                                params['fovy'], params['fovx'], params['near'], params['far'])
