@@ -196,7 +196,7 @@ def test():
     # initialise renderer
     renderer = Renderer(sh_degree=3, white_background=True, radius=0.5)
     # initialise gaussians, stored in renderer
-    renderer.initialize(num_pts=50)
+    renderer.initialize(num_pts=5)
     # initialise camera
     pose = orbit_camera(elevation=params['elevation'],
                         azimuth=params['azimuth']
