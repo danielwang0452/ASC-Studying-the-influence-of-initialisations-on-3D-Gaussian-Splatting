@@ -222,10 +222,10 @@ def test():
             compute_cov3D_python=False,
             convert_SHs_python=False,
     )
-    # display image
+    # display image - shape (C, H, W)
     #print(rendered_image.shape)
     #print(rendered_image)
-    plt.imshow(rendered_image.cpu().detach().numpy())
+    plt.imshow(rendered_image.cpu().detach().premute((1, 2, 0)).numpy())
     plt.axis('off')  # Hide axis
     plt.show()
     return
