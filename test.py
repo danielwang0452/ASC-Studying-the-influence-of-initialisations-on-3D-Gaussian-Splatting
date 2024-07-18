@@ -28,6 +28,7 @@ from typing import NamedTuple
 #from utils.image_utils import psnr
 #from argparse import ArgumentParser, Namespace
 #from arguments import ModelParams, PipelineParams, OptimizationParams
+from PIL import Image
 from test_camera import MiniCam, orbit_camera
 from test_SimpleGaussianModel import SimpleGaussianModel
 class Renderer:
@@ -217,6 +218,9 @@ def test():
     plt.imshow(image)
     plt.axis('off')  # Hide axis
     plt.show()
+    image_pil = Image.fromarray((image * 255).astype('uint8'))
+    image_pil.save('rendered_image.png')
+    image_pil.show()
     return
 
 class BasicPointCloud(NamedTuple):
