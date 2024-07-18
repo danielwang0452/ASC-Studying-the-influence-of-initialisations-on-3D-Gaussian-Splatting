@@ -39,12 +39,12 @@ class Renderer:
         self.radius = radius
         self.gaussians = SimpleGaussianModel(sh_degree)
         self.bg_color = torch.tensor(
-            [0.5, 0.5, 0.5] if white_background else [0.5, 0.5, 0.5],
+            [1, 1, 1] if white_background else [0, 0, 0],
             dtype=torch.float32,
             device="cuda",
         )
 
-    def initialize(self, input=None, num_pts=5000, radius=0.5):
+    def initialize(self, input=None, num_pts=5000, radius=0.1):
         # init from random point cloud
         phis = np.random.random((num_pts,)) * 2 * np.pi
         costheta = np.random.random((num_pts,)) * 2 - 1
