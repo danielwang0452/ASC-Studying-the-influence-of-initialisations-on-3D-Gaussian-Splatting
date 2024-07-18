@@ -227,6 +227,10 @@ def test():
     image_pil = Image.fromarray((image * 255).astype('uint8'))
     image_pil.save('rendered_image.png')
     image_pil.show()
+
+    image_pil = Image.fromarray((img * 255).astype('uint8'))
+    image_pil.save('rendered_image2.png')
+    image_pil.show()
     return
 
 class BasicPointCloud(NamedTuple):
