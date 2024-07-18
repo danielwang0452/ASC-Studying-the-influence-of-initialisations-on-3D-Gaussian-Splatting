@@ -225,7 +225,7 @@ def test():
     # display image - shape (C, H, W)
     #print(rendered_image.shape)
     #print(rendered_image)
-    plt.imshow(rendered_image.cpu().detach().premute((1, 2, 0)).numpy())
+    plt.imshow(rendered_image.cpu().detach().permute((1, 2, 0)).numpy())
     plt.axis('off')  # Hide axis
     plt.show()
     return
