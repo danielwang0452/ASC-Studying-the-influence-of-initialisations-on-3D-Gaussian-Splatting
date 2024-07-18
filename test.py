@@ -44,7 +44,7 @@ class Renderer:
             device="cuda",
         )
 
-    def initialize(self, input=None, num_pts=5000, radius=2):
+    def initialize(self, input=None, num_pts=1, radius=0.5):
         # init from random point cloud
         phis = np.random.random((num_pts,)) * 2 * np.pi
         costheta = np.random.random((num_pts,)) * 2 - 1
@@ -177,7 +177,7 @@ sh_degree: 0
 def test():
     params = {
         # defined in image.yaml
-        'radius': 10,
+        'radius': 2,
         'fovy': 49.1,
         'min_ver': -30,
         'max_ver': 30,
