@@ -44,7 +44,7 @@ class Renderer:
             device="cuda",
         )
 
-    def initialize(self, input=None, num_pts=5000, radius=0.1):
+    def initialize(self, input=None, num_pts=5000, radius=2):
         # init from random point cloud
         phis = np.random.random((num_pts,)) * 2 * np.pi
         costheta = np.random.random((num_pts,)) * 2 - 1
