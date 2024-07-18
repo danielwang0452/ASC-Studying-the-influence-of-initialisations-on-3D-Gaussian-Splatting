@@ -213,8 +213,8 @@ def test():
             convert_SHs_python=False,
     )
     # display image - shape (C, H, W)
+    plt.switch_backend('inline')
     image = rendered_image.cpu().detach().clamp(0, 1).permute((1, 2, 0)).numpy()
-    print(image.shape)
     plt.imshow(image)
     plt.axis('off')  # Hide axis
     plt.show()
