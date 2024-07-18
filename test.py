@@ -214,12 +214,8 @@ def test():
     )
     # display image - shape (C, H, W)
     image = rendered_image.cpu().detach().clamp(0, 1).permute((1, 2, 0)).numpy()
+    print(image)
     plt.imshow(image)
-    plt.axis('off')  # Hide axis
-    plt.show()
-
-    img = np.random.rand(128, 128, 3)
-    plt.imshow(img)
     plt.axis('off')  # Hide axis
     plt.show()
 
@@ -227,9 +223,6 @@ def test():
     image_pil.save('rendered_image.png')
     image_pil.show()
 
-    image_pil = Image.fromarray((img * 255).astype('uint8'))
-    image_pil.save('rendered_image2.png')
-    image_pil.show()
     return
 
 class BasicPointCloud(NamedTuple):
