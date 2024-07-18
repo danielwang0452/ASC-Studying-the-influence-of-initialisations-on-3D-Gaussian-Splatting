@@ -148,10 +148,10 @@ class Renderer:
         print(means2D.device)
         print(shs.device)
         print(colors_precomp)
-        print(opacity.device)
+        print(opacity.device) #
         print(scales.device)
-        print(rotations.device)
-        print(cov3D_precomp.device)
+        print(rotations.device) #
+        print(cov3D_precomp)
         rendered_image, radii = rasterizer(
             means3D=means3D,
             means2D=means2D,

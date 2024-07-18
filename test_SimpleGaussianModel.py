@@ -91,7 +91,7 @@ class SimpleGaussianModel:
 
     @property
     def get_rotation(self):
-        return self.rotation_activation(self._rotation)
+        return self.rotation_activation(self._rotation).cuda()
 
     @property
     def get_xyz(self):
