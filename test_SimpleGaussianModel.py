@@ -59,8 +59,7 @@ class SimpleGaussianModel:
         #scales = torch.log(torch.sqrt(dist2))[..., None].repeat(1, 3)
         scales = torch.log(torch.clamp_min(1.0*torch.rand((pcd.points.shape[0]))[..., None].repeat(1, 3), 0.0000001)).cuda()
         rots = torch.zeros((fused_point_cloud.shape[0], 4), device="cuda")
-        rots[:, 3] = 1
-        rots[:, 2] = 1
+        rots[:, 0] = 1
 
         opacities = inverse_sigmoid(opacity * torch.ones((fused_point_cloud.shape[0], 1), dtype=torch.float, device="cuda"))
 
