@@ -177,7 +177,7 @@ sh_degree: 0
 def test():
     params = {
         # defined in image.yaml
-        'radius': 2,
+        'radius': 10,
         'fovy': 49.1,
         'min_ver': -30,
         'max_ver': 30,
