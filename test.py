@@ -227,7 +227,7 @@ def test():
     #print(rendered_image)
     plt.imshow(rendered_image.cpu().detach().permute((1, 2, 0)).numpy())
     plt.axis('off')  # Hide axis
-    plt.show()
+    plt.show(rendered_image.cpu().detach().permute((1, 2, 0)).numpy())
     return
 
 class BasicPointCloud(NamedTuple):
