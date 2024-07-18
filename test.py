@@ -44,7 +44,7 @@ class Renderer:
             device="cuda",
         )
 
-    def initialize(self, input=None, num_pts=1, radius=0.5):
+    def initialize(self, input=None, num_pts=5000, radius=0.5):
         # init from random point cloud
         phis = np.random.random((num_pts,)) * 2 * np.pi
         costheta = np.random.random((num_pts,)) * 2 - 1
@@ -196,7 +196,7 @@ def test():
     # initialise renderer
     renderer = Renderer(sh_degree=3, white_background=True, radius=1)
     # initialise gaussians, stored in renderer
-    renderer.initialize(num_pts=5000)
+    renderer.initialize(num_pts=1)
     # initialise camera
     pose = orbit_camera(elevation=params['elevation'],
                         azimuth=params['azimuth']
