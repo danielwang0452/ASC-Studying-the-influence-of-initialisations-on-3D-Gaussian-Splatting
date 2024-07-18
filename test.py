@@ -144,28 +144,17 @@ class Renderer:
             colors_precomp = override_color
 
         # Rasterize visible Gaussians to image, obtain their radii (on screen).
-        print(means3D.device)
-        print(means2D.device)
-        print(shs.device)
-        print(colors_precomp)
-        print(opacity.device) #
-        print(scales.device)
-        print(rotations.device) #
-        print(cov3D_precomp)
         rendered_image, radii = rasterizer(
             means3D=means3D,
             means2D=means2D,
             shs=shs,
-            colors_precomp=colors_precomp,
+            colors_precomp=colors_precomp, # None
             opacities=opacity,
             scales=scales,
             rotations=rotations,
-            cov3D_precomp=cov3D_precomp,
+            cov3D_precomp=cov3D_precomp, # None
         )
-        #print(radii)
-        #print(rendered_image)
-        #rendered_image = rendered_image.cpu().detach().clamp(0, 1).numpy()
-
+        # rendered_image = rendered_image.cpu().detach().clamp(0, 1).numpy()
         # Those Gaussians that were frustum culled or had a radius of 0 were not visible.
         # They will be excluded from value updates used in the splitting criteria.
         return rendered_image
@@ -223,11 +212,10 @@ def test():
             convert_SHs_python=False,
     )
     # display image - shape (C, H, W)
-    #print(rendered_image.shape)
-    #print(rendered_image)
-    plt.imshow(rendered_image.cpu().detach().permute((1, 2, 0)).numpy())
+    image = rendered_image.cpu().detach().clamp(0, 1).permute((1, 2, 0)).numpy()
+    plt.imshow()
     plt.axis('off')  # Hide axis
-    plt.show(rendered_image.cpu().detach().permute((1, 2, 0)).numpy())
+    plt.show()
     return
 
 class BasicPointCloud(NamedTuple):
