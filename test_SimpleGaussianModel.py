@@ -43,7 +43,7 @@ class SimpleGaussianModel:
         self.setup_functions()
 
     def create_from_pcd(self, pcd, spatial_lr_scale: float = 1):
-        opacity = 0.1
+        opacity = 0.5
 
         self.spatial_lr_scale = spatial_lr_scale
         fused_point_cloud = torch.tensor(np.asarray(pcd.points)).float().cuda()
