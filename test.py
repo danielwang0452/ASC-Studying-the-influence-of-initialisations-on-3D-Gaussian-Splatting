@@ -225,7 +225,7 @@ def test():
     # display image
     #print(rendered_image.shape)
     #print(rendered_image)
-    plt.imshow(rendered_image.cpu())
+    plt.imshow(rendered_image.cpu().detach().numpy())
     plt.axis('off')  # Hide axis
     plt.show()
     return
