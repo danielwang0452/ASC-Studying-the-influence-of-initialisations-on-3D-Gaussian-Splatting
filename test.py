@@ -213,7 +213,7 @@ def test():
     )
     # display image - shape (C, H, W)
     image = rendered_image.cpu().detach().clamp(0, 1).permute((1, 2, 0)).numpy()
-    plt.imshow()
+    plt.imshow(image)
     plt.axis('off')  # Hide axis
     plt.show()
     return
