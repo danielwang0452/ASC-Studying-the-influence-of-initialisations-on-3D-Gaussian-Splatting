@@ -218,6 +218,12 @@ def test():
     plt.imshow(image)
     plt.axis('off')  # Hide axis
     plt.show()
+
+    img = np.random.rand(128, 128, 3)
+    plt.imshow(img)
+    plt.axis('off')  # Hide axis
+    plt.show()
+
     image_pil = Image.fromarray((image * 255).astype('uint8'))
     image_pil.save('rendered_image.png')
     image_pil.show()
