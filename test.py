@@ -194,7 +194,7 @@ def test():
     }
     params['fovx'] = 2 * np.arctan(np.tan(params['fovy'] / 2) * params['W'] / params['H'])
     # initialise renderer
-    renderer = Renderer(sh_degree=3, white_background=True, radius=1)
+    renderer = Renderer(sh_degree=3, white_background=True, radius=0.5)
     # initialise gaussians, stored in renderer
     renderer.initialize(num_pts=50)
     # initialise camera
