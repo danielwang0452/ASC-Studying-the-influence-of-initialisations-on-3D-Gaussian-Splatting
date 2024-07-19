@@ -248,7 +248,7 @@ def train(n_iterations):
     # initialise renderer
     renderer = Renderer(sh_degree=3, white_background=True, radius=0.5) # radius containing gaussians
     # initialise gaussians, stored in renderer
-    renderer.initialize(num_pts=1, radius=0.5)
+    renderer.initialize(num_pts=500, radius=0.5)
     # initialise camera
     pose = orbit_camera(elevation=params['elevation'],
                         azimuth=params['azimuth'],
@@ -292,4 +292,5 @@ class BasicPointCloud(NamedTuple):
     normals: np.array
 
 if __name__ == "__main__":
-    test()
+    #test()
+    train(n_iterations=500)
