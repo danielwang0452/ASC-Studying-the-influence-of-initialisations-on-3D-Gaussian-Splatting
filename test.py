@@ -293,4 +293,4 @@ class BasicPointCloud(NamedTuple):
 
 if __name__ == "__main__":
     #test()
-    train(n_iterations=500)
+    train(n_iterations=5000)
