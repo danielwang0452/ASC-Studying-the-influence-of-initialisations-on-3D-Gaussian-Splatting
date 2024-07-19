@@ -248,7 +248,7 @@ def train(n_iterations):
     # initialise renderer
     renderer = Renderer(sh_degree=3, white_background=True)
     # initialise gaussians, stored in renderer
-    renderer.initialize(num_pts=5000, radius=0.5)
+    renderer.initialize(num_pts=5000, radius=1.0)
     # initialise camera
     pose = orbit_camera(elevation=params['elevation'],
                         azimuth=params['azimuth'],
