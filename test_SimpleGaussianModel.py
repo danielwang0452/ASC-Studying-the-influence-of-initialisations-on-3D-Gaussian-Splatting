@@ -70,6 +70,18 @@ class SimpleGaussianModel:
         self._rotation = nn.Parameter(rots.requires_grad_(True))
         self._opacity = nn.Parameter(opacities.requires_grad_(True))
         self.max_radii2D = torch.zeros((self.get_xyz.shape[0]), device="cuda")
+        # set up optimizer
+        lr = 1e-3
+        l = [
+            {'params': [self._xyz], 'lr': lr, "name": "xyz"},
+            {'params': [self._features_dc], 'lr': lr, "name": "f_dc"},
+            {'params': [self._features_rest], 'lr': lr / 20.0, "name": "f_rest"},
+            {'params': [self._opacity], 'lr': lr, "name": "opacity"},
+            {'params': [self._scaling], 'lr': lr, "name": "scaling"},
+            {'params': [self._rotation], 'lr': lr, "name": "rotation"}
+        ]
+
+        self.optimizer = torch.optim.Adam(l, lr=lr, eps=1e-15)
 
     def distCUDA2(self, x):
         """

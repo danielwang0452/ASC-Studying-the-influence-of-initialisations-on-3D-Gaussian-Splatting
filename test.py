@@ -11,6 +11,7 @@
 
 import os
 import torch
+import torch.nn as nn
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -215,7 +216,7 @@ def test():
     )
     # display image - shape (C, H, W)
     image = rendered_image.cpu().detach().clamp(0, 1).permute((1, 2, 0)).numpy()
-    print(image)
+
     plt.imshow(image)
     plt.axis('off')  # Hide axis
     plt.show()
@@ -223,7 +224,66 @@ def test():
     image_pil = Image.fromarray((image * 255).astype('uint8'))
     image_pil.save('rendered_image.png')
     image_pil.show()
+    return
 
+def train(n_iterations):
+    params = {
+        # defined in image.yaml
+        'radius': 1,
+        'fovy': 49.1,
+        'min_ver': -30,
+        'max_ver': 30,
+        'H': 800,
+        'W': 800,
+        'sh_degree': 0,
+        # defined in OrbitCamera Class
+        'near' : 0.01,
+        'far' : 100,
+        # extra self defined params
+        'elevation' : 0, # elevation: scalar, in (-90, 90), from +y to -y is (-90, 90)
+        'azimuth' : 0,   # azimuth: scalar, in (-180, 180), from +z to +x is (0, 90)
+        'render_resolution' : 128
+    }
+    params['fovx'] = 2 * np.arctan(np.tan(params['fovy'] / 2) * params['W'] / params['H'])
+    # initialise renderer
+    renderer = Renderer(sh_degree=3, white_background=True, radius=0.5) # radius containing gaussians
+    # initialise gaussians, stored in renderer
+    renderer.initialize(num_pts=1, radius=0.5)
+    # initialise camera
+    pose = orbit_camera(elevation=params['elevation'],
+                        azimuth=params['azimuth'],
+                        radius=5
+                       )  # return: [4, 4], camera pose matrix
+    viewpoint_camera = MiniCam(pose, params['render_resolution'], params['render_resolution'],
+                               params['fovy'], params['fovx'], params['near'], params['far'])
+    # training
+    tgt_image = torch.rand((3, params['render_resolution'], params['render_resolution'])).cuda()
+    loss_fn = nn.L1Loss()
+    for iteration in n_iterations:
+        # render
+        rendered_image = renderer.render(
+                viewpoint_camera,
+                scaling_modifier=1.0,
+                bg_color=None,
+                override_color=None,
+                compute_cov3D_python=False,
+                convert_SHs_python=False,
+        )
+        # loss
+        loss = loss_fn(rendered_image, tgt_image)
+        self.gaussians.optimizer.zero_grad()
+        loss.backward()
+        self.gaussians.optimizer.step()
+    # display image - shape (C, H, W)
+    image = rendered_image.cpu().detach().clamp(0, 1).permute((1, 2, 0)).numpy()
+
+    plt.imshow(image)
+    plt.axis('off')  # Hide axis
+    plt.show()
+
+    image_pil = Image.fromarray((image * 255).astype('uint8'))
+    image_pil.save('rendered_image.png')
+    image_pil.show()
     return
 
 class BasicPointCloud(NamedTuple):
