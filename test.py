@@ -259,7 +259,7 @@ def train(n_iterations):
     # training
     tgt_image = torch.rand((3, params['render_resolution'], params['render_resolution'])).cuda()
     loss_fn = nn.L1Loss()
-    for iteration in n_iterations:
+    for iteration in range(n_iterations):
         # render
         rendered_image = renderer.render(
                 viewpoint_camera,
