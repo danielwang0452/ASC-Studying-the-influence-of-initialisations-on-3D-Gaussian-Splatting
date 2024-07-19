@@ -271,9 +271,9 @@ def train(n_iterations):
         )
         # loss
         loss = loss_fn(rendered_image, tgt_image)
-        self.gaussians.optimizer.zero_grad()
+        renderer.gaussians.optimizer.zero_grad()
         loss.backward()
-        self.gaussians.optimizer.step()
+        renderer.gaussians.optimizer.step()
     # display image - shape (C, H, W)
     image = rendered_image.cpu().detach().clamp(0, 1).permute((1, 2, 0)).numpy()
 
