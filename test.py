@@ -246,9 +246,9 @@ def train(n_iterations):
     }
     params['fovx'] = 2 * np.arctan(np.tan(params['fovy'] / 2) * params['W'] / params['H'])
     # initialise renderer
-    renderer = Renderer(sh_degree=3, white_background=True, radius=0.5) # radius containing gaussians
+    renderer = Renderer(sh_degree=3, white_background=True)
     # initialise gaussians, stored in renderer
-    renderer.initialize(num_pts=500, radius=0.5)
+    renderer.initialize(num_pts=5000, radius=0.5)
     # initialise camera
     pose = orbit_camera(elevation=params['elevation'],
                         azimuth=params['azimuth'],
